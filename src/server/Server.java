@@ -10,7 +10,6 @@ import java.util.Arrays;
 public class Server extends Thread {
 
     private DatagramSocket socket;
-    private boolean running;
     private byte[] buf = new byte[6];
     private RobotController controller;
 
@@ -25,8 +24,6 @@ public class Server extends Thread {
     }
 
     public void run() {
-        running = true;
-
         System.out.println("Server aberto");
         while (!Thread.currentThread().isInterrupted()) {
             try {
