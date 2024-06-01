@@ -1,11 +1,12 @@
 package server;
 
+import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-public class App extends javafx.application.Application {
+public class App extends Application {
 
     public static Server server;
     public static RobotController robotController;
@@ -22,6 +23,10 @@ public class App extends javafx.application.Application {
         server.start();
     }
 
+    @Override
+    public void stop() {
+        server.interrupt();
+    }
 
     public static void main(String[] args) {
         launch(args);

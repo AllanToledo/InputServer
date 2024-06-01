@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.util.Arrays;
 
 public class Server extends Thread {
@@ -16,6 +17,7 @@ public class Server extends Thread {
     public Server(RobotController controller) {
         try {
             socket = new DatagramSocket(3000);
+            socket.setSoTimeout(1000);
         } catch (SocketException e) {
             e.printStackTrace();
         }
@@ -26,7 +28,7 @@ public class Server extends Thread {
         running = true;
 
         System.out.println("Server aberto");
-        while (running) {
+        while (!Thread.currentThread().isInterrupted()) {
             try {
 
                 DatagramPacket packet = new DatagramPacket(buf, buf.length);
@@ -34,13 +36,9 @@ public class Server extends Thread {
 
                 controller.receiveInput(packet.getData());
                 System.out.println(Arrays.toString(packet.getData()));
-
+            } catch (SocketTimeoutException ignored) {
             } catch (IOException e) {
-                System.out.println(e.getMessage());
-            } catch (Exception | ThreadDeath e) {
-                Thread.currentThread().interrupt();
-                System.out.println(e.getMessage());
-                running = false;
+                e.printStackTrace();
             }
         }
         System.out.println("Server fechado");
